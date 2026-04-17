@@ -122,7 +122,7 @@ export default function SignupPage() {
                   <button key={role} type="button" onClick={() => update('role', role)} style={{ padding: '16px', border: `2px solid ${form.role === role ? 'var(--purple)' : 'var(--border)'}`, borderRadius: 12, background: form.role === role ? 'rgba(124,58,237,0.15)' : 'rgba(255,255,255,0.03)', cursor: 'pointer', color: 'var(--text-primary)', transition: 'all 0.2s', textAlign: 'center' }}>
                     <div style={{ fontSize: '2rem', marginBottom: 8 }}>{role === 'creator' ? '🎬' : '🛒'}</div>
                     <div style={{ fontWeight: 700, marginBottom: 4, textTransform: 'capitalize' }}>{role}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{role === 'creator' ? 'Offer services & grow' : 'Hire creators'}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{role === 'creator' ? 'Find jobs & earn' : 'Post jobs & hire'}</div>
                   </button>
                 ))}
               </div>
