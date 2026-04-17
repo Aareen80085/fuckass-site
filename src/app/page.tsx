@@ -36,7 +36,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="landing-nav">
         <span className="logo" style={{ fontSize: '1.4rem', fontWeight: 800, background: 'linear-gradient(135deg,#a855f7,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          ✦ Creatify
+          ✦ Facet
         </span>
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <Link href="/login" className="btn btn-ghost btn-sm">Login</Link>
@@ -45,34 +45,68 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="hero-section">
-        <div className="orb orb-purple" style={{ width: 500, height: 500, top: '10%', left: '5%' }} />
-        <div className="orb orb-pink" style={{ width: 400, height: 400, top: '20%', right: '10%' }} />
-        <div className="orb orb-cyan" style={{ width: 300, height: 300, bottom: '10%', left: '40%' }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 800, margin: '0 auto' }}>
-          <div className="ai-badge" style={{ marginBottom: 24, display: 'inline-flex' }}>
-            🤖 AI-Powered Creator Platform
+      <section className="hero-section" style={{ position: 'relative', padding: '120px 20px', textAlign: 'center', background: 'var(--bg-primary)' }}>
+        {/* Subtle CSS Grid Background matching the screenshot */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px)', backgroundSize: '60px 60px', zIndex: 0 }} />
+        
+        {/* Glow Effects */}
+        <div className="orb orb-purple" style={{ width: 600, height: 600, top: '0%', left: '10%', opacity: 0.2 }} />
+        <div className="orb orb-pink" style={{ width: 500, height: 500, top: '20%', right: '10%', opacity: 0.15 }} />
+        <div className="orb orb-cyan" style={{ width: 400, height: 400, bottom: '0%', left: '30%', opacity: 0.15 }} />
+        
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          
+          <div style={{ padding: '6px 16px', background: 'rgba(124, 58, 237, 0.1)', border: '1px solid rgba(124, 58, 237, 0.3)', borderRadius: 999, fontSize: '0.85rem', fontWeight: 600, color: '#c4b5fd', marginBottom: 32, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            ✨ AI-Powered Creator Platform
           </div>
-          <h1>
-            The Marketplace <span className="gradient-text">Built for Creators</span>
+          
+          <h1 style={{ fontSize: '5.5rem', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: 32 }}>
+            The Marketplace Built<br />
+            for <span style={{ background: 'linear-gradient(90deg, #a855f7, #ec4899, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>Content Creators</span>
           </h1>
-          <p style={{ fontSize: '1.15rem', color: 'var(--text-secondary)', marginTop: 20, lineHeight: 1.8, maxWidth: 600, margin: '20px auto 0' }}>
-            Sell your content creation services, grow your personal brand, and let our AI agent audit your profile, generate strategies, and optimize your gigs.
+          
+          <p style={{ fontSize: '1.25rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, maxWidth: 700, margin: '0 auto 40px' }}>
+            Find expert editors, designers, and strategists — or offer your creator services. With an AI agent that audits your profile and generates personalized growth strategies.
           </p>
-          <div className="hero-cta">
-            <Link href="/signup" className="btn btn-primary btn-lg">
-              ✦ Start for Free
+          
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 48 }}>
+            <div style={{ padding: '8px 20px', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: 999, color: '#f87171', fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: '1.1rem' }}>▶</span> YouTube
+            </div>
+            <div style={{ padding: '8px 20px', background: 'rgba(236, 72, 153, 0.05)', border: '1px solid rgba(236, 72, 153, 0.2)', borderRadius: 999, color: '#f472b6', fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: '1.1rem' }}>📸</span> Instagram
+            </div>
+            <div style={{ padding: '8px 20px', background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.2)', borderRadius: 999, color: '#22d3ee', fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: '1.1rem' }}>🎵</span> TikTok
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', gap: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 48 }}>
+            <Link href="/signup" style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)', color: '#fff', padding: '16px 36px', borderRadius: 12, fontSize: '1.1rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: '0 10px 30px rgba(236, 72, 153, 0.3)' }} className="hover-scale">
+              ✨ Start for Free →
             </Link>
-            <Link href="/login" className="btn btn-secondary btn-lg">
-              View Demo ↗
+            <Link href="/login" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', padding: '16px 36px', borderRadius: 12, fontSize: '1.1rem', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.2s' }} className="hover-glass">
+              ▷ View Demo
             </Link>
           </div>
-          {/* Niche Tags */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginTop: 40 }}>
-            {niches.map(n => (
-              <span key={n} style={{ padding: '6px 14px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 999, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{n}</span>
-            ))}
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ display: 'flex' }}>
+              {[
+                { bg: '#7c3aed', initials: 'SK' },
+                { bg: '#ec4899', initials: 'MT' },
+                { bg: '#f59e0b', initials: 'PR' },
+                { bg: '#84cc16', initials: 'JD' },
+                { bg: '#10b981', initials: 'AL' }
+              ].map((avatar, i) => (
+                <div key={i} style={{ width: 32, height: 32, borderRadius: '50%', background: avatar.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.65rem', fontWeight: 800, color: '#fff', border: '2px solid var(--bg-primary)', marginLeft: i > 0 ? -10 : 0 }}>
+                  {avatar.initials}
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.5)' }}>Joined by <strong style={{ color: '#fff' }}>50,000+</strong> creators</p>
           </div>
+          
         </div>
       </section>
 
@@ -136,7 +170,7 @@ export default function LandingPage() {
       {/* CTA Footer */}
       <section style={{ padding: '80px 40px', textAlign: 'center' }}>
         <h2 style={{ marginBottom: 12 }}>Ready to <span className="gradient-text">Level Up?</span></h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>Join 12,000+ creators already growing with Creatify</p>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 32 }}>Join 12,000+ creators already growing with Facet</p>
         <Link href="/signup" className="btn btn-primary btn-lg" style={{ padding: '16px 48px', fontSize: '1.05rem' }}>
           ✦ Create Free Account
         </Link>
@@ -144,8 +178,8 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <span style={{ fontWeight: 800, background: 'linear-gradient(135deg,#a855f7,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>✦ Creatify</span>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>© 2025 Creatify. Built for creators, by creators.</span>
+        <span style={{ fontWeight: 800, background: 'linear-gradient(135deg,#a855f7,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>✦ Facet</span>
+        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>© 2025 Facet. Built for creators, by creators.</span>
         <div style={{ display: 'flex', gap: 20 }}>
           {['Terms', 'Privacy', 'Support'].map(l => <a key={l} href="#" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textDecoration: 'none' }}>{l}</a>)}
         </div>

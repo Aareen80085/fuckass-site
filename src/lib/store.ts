@@ -31,6 +31,7 @@ export interface User {
   displayName: string;
   username: string;
   avatar?: string;
+  photoURL?: string;
   bio: string;
   niche: string;
   skills: Skill[];
@@ -89,6 +90,7 @@ interface AppState {
   orders: Order[];
   apiKey: string;
 
+  setCurrentUser: (user: User | Partial<User> | null) => void;
   login: (email: string, password: string) => User | null;
   signup: (data: Partial<User> & { password: string }) => User;
   logout: () => void;
@@ -96,6 +98,7 @@ interface AppState {
   addGig: (gig: Omit<Gig, 'id' | 'views' | 'orders' | 'rating' | 'createdAt'>) => void;
   updateGig: (id: string, updates: Partial<Gig>) => void;
   deleteGig: (id: string) => void;
+  addOrder: (order: Order) => void;
   updateOrderStatus: (id: string, status: Order['status']) => void;
   setApiKey: (key: string) => void;
 }
@@ -238,6 +241,8 @@ export const useStore = create<AppState>()(
       orders: DEMO_ORDERS,
       apiKey: '',
 
+      setCurrentUser: (user: User | Partial<User> | null) => set({ currentUser: user as User | null }),
+
       login(email, password) {
         const user = get().users.find(u => u.email === email && u.password === password);
         if (user) set({ currentUser: user });
@@ -297,6 +302,10 @@ export const useStore = create<AppState>()(
         set(s => ({ gigs: s.gigs.filter(g => g.id !== id) }));
       },
 
+      addOrder(order) {
+        set(s => ({ orders: [...s.orders, order] }));
+      },
+
       updateOrderStatus(id, status) {
         set(s => ({ orders: s.orders.map(o => o.id === id ? { ...o, status } : o) }));
       },
@@ -304,7 +313,7 @@ export const useStore = create<AppState>()(
       setApiKey(key) { set({ apiKey: key }); },
     }),
     {
-      name: 'creatify-store',
+      name: 'facet-store',
       partialize: s => ({
         currentUser: s.currentUser,
         users: s.users,

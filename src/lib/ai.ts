@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface ProfileData {
   displayName: string;
@@ -168,11 +168,14 @@ export function getMockGigOptimization(gig: GigData): GigOptimization {
   };
 }
 
-// ─── OPENAI API CALLS ─────────────────────────────────────────────────────────
+// ─── GEMINI API CALLS ─────────────────────────────────────────────────────────
 
-export async function auditProfile(profile: ProfileData, apiKey: string): Promise<AuditResult> {
+export async function auditProfile(profile: ProfileData, apiKey?: string): Promise<AuditResult> {
+  const key = apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  if (!key) return getMockAudit(profile);
   try {
-    const client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
+    const genAI = new GoogleGenerativeAI(key);
+    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest', generationConfig: { responseMimeType: 'application/json' }});
     const prompt = `You are an expert content creator coach. Audit this creator profile and return a JSON object with exactly this structure:
 {
   "score": <0-100>,
@@ -195,25 +198,24 @@ Profile:
 - Portfolio: ${profile.portfolio.length} items
 - Social: ${profile.socialLinks.map(s => `${s.platform}@${s.followers || 0} followers`).join(', ')}
 
-Return ONLY valid JSON, no markdown.`;
+Return ONLY valid JSON.`;
 
-    const resp = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
-      max_tokens: 1200,
-    });
-
-    return JSON.parse(resp.choices[0].message.content || '{}') as AuditResult;
-  } catch {
+    const resp = await model.generateContent(prompt);
+    const text = resp.response.text().replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    return JSON.parse(text) as AuditResult;
+  } catch (err) {
+    console.error('Gemini Audit Error:', err);
     return getMockAudit(profile);
   }
 }
 
-export async function generateContentStrategy(profile: ProfileData, apiKey: string): Promise<ContentStrategy> {
+export async function generateContentStrategy(profile: ProfileData, apiKey?: string): Promise<ContentStrategy> {
+  const key = apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  if (!key) return getMockStrategy(profile);
   try {
-    const client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
-    const prompt = `You are a content strategist. Generate a detailed content strategy for a ${profile.niche} creator. Return a JSON object matching this structure exactly (no markdown):
+    const genAI = new GoogleGenerativeAI(key);
+    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest', generationConfig: { responseMimeType: 'application/json' }});
+    const prompt = `You are a content strategist. Generate a detailed content strategy for a ${profile.niche} creator. Return a JSON object matching this structure exactly:
 {
   "weeklyPlan": [{"day":"Monday","platform":"YouTube","type":"Long-form","idea":"...","hook":"..."},...7 days],
   "platformStrategies": {
@@ -227,22 +229,21 @@ export async function generateContentStrategy(profile: ProfileData, apiKey: stri
   "captionTemplates": ["...",...3 items]
 }`;
 
-    const resp = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.8,
-      max_tokens: 2000,
-    });
-
-    return JSON.parse(resp.choices[0].message.content || '{}') as ContentStrategy;
-  } catch {
+    const resp = await model.generateContent(prompt);
+    const text = resp.response.text().replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    return JSON.parse(text) as ContentStrategy;
+  } catch (err) {
+    console.error('Gemini Strategy Error:', err);
     return getMockStrategy(profile);
   }
 }
 
-export async function optimizeGig(gig: GigData, apiKey: string): Promise<GigOptimization> {
+export async function optimizeGig(gig: GigData, apiKey?: string): Promise<GigOptimization> {
+  const key = apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  if (!key) return getMockGigOptimization(gig);
   try {
-    const client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
+    const genAI = new GoogleGenerativeAI(key);
+    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest', generationConfig: { responseMimeType: 'application/json' }});
     const prompt = `You are a Fiverr optimization expert. Improve this gig and return JSON only:
 {
   "improvedTitle": "...",
@@ -253,21 +254,18 @@ export async function optimizeGig(gig: GigData, apiKey: string): Promise<GigOpti
 }
 Gig: ${JSON.stringify(gig)}`;
 
-    const resp = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
-      max_tokens: 800,
-    });
-
-    return JSON.parse(resp.choices[0].message.content || '{}') as GigOptimization;
-  } catch {
+    const resp = await model.generateContent(prompt);
+    const text = resp.response.text().replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    return JSON.parse(text) as GigOptimization;
+  } catch (err) {
+    console.error('Gemini Gig Opt Error:', err);
     return getMockGigOptimization(gig);
   }
 }
 
-export async function chatWithAI(messages: Array<{ role: 'user' | 'assistant'; content: string }>, profile: ProfileData, apiKey: string): Promise<string> {
-  if (!apiKey) {
+export async function chatWithAI(messages: Array<{ role: 'user' | 'assistant'; content: string }>, profile: ProfileData, apiKey?: string): Promise<string> {
+  const key = apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  if (!key) {
     // Smart demo responses
     const lastMsg = messages[messages.length - 1]?.content.toLowerCase() || '';
     if (lastMsg.includes('thumbnail')) return 'Great question about thumbnails! The key to a viral thumbnail is the "3-second test" — it needs to communicate value in under 3 seconds. Use contrasting colors, faces with emotion, and bold text (max 5 words). Want me to audit your current thumbnails?';
@@ -279,21 +277,27 @@ export async function chatWithAI(messages: Array<{ role: 'user' | 'assistant'; c
   }
 
   try {
-    const client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
-    const system = `You are CreatorAI, an expert content creator coach on the Creatify platform. You specialize in YouTube, Instagram, TikTok, and content monetization. The user's profile: niche="${profile.niche}", skills=[${profile.skills.map(s => s.name).join(', ')}]. Be concise, actionable, and specific. Use markdown formatting.`;
+    const genAI = new GoogleGenerativeAI(key);
+    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
+    
+    // Construct chat history for Gemini
+    const contents = [];
+    const systemInstruction = `You are CreatorAI, an expert content creator coach on the Facet platform. You specialize in YouTube, Instagram, TikTok, and content monetization. The user's profile: niche="${profile.niche}", skills=[${profile.skills.map(s => s.name).join(', ')}]. Be concise, actionable, and specific. Use markdown formatting.`;
+    
+    // Gemini handles system instructions in model config or first user prompt
+    contents.push({ role: 'user', parts: [{ text: systemInstruction }] });
+    contents.push({ role: 'model', parts: [{ text: "Understood. I will act as CreatorAI." }] });
 
-    const resp = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: system },
-        ...messages,
-      ],
-      temperature: 0.75,
-      max_tokens: 600,
+    messages.forEach(msg => {
+      contents.push({
+        role: msg.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: msg.content }]
+      });
     });
 
-    return resp.choices[0].message.content || 'Sorry, I couldn\'t generate a response.';
+    const resp = await model.generateContent({ contents });
+    return resp.response.text();
   } catch (err: any) {
-    return `There was an error with the AI: ${err?.message || 'Unknown error'}. Make sure your API key is valid.`;
+    return `There was an error with the AI: ${err?.message || 'Unknown error'}. Make sure your Gemini API key is valid.`;
   }
 }
